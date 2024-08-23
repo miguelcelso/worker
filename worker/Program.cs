@@ -1,7 +1,20 @@
+using InfraInversionControl.extensions;
 using worker;
 
-var builder = Host.CreateApplicationBuilder(args);
-builder.Services.AddHostedService<Worker>();
 
-var host = builder.Build();
-host.Run();
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        CreateHostBuilder(args).Build().Run();
+    }
+
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+        .ConfigureServices((hostContext, services) =>
+        {
+            var configuration = hostContext.Configuration;
+            services.AddServices(configuration).AddHostedService<Worker>();
+        });
+
+}
